@@ -14,7 +14,7 @@ def get_valid_input():
 
 def process_delivery(current_total, newStock):
     new_total = current_total + newStock
-    return new_total
+    return int(new_total)
 
 def calculate_tax(newStock):
     tax = newStock * 0.1
@@ -22,18 +22,19 @@ def calculate_tax(newStock):
 
 def generate_report(deliveryProcessed, failedAttempts):
     print(f"Total Delivery Processed: {deliveryProcessed}")
-    print(f"Total Failed Attemps: {failedAttempts}")
+    print(f"Total Failed Attempts: {failedAttempts}")
 
 while True:
     stock = get_valid_input()
     if stock == 'quit':
-        generate_report(inventory, failed_attempts)
+        generate_report(processed_delivery, failed_attempts)
         print("GoodBye!")
+        break
     if stock is None:
         failed_attempts += 1
         continue
     inventory = process_delivery(inventory, stock)
-    tax = calculate_tax
+    tax = calculate_tax(stock)
     print(f"Tax for this delivery: {tax}")
     processed_delivery += 1
 
