@@ -5,7 +5,7 @@ processed_delivery = 0
 def load_inventory(filename = "inventory.txt"):
     try:
         with open(filename, "r") as f:
-            lines = f.readlines():
+            lines = f.readlines()
     except FileNotFoundError:
         return 0, []
 
@@ -17,7 +17,7 @@ def load_inventory(filename = "inventory.txt"):
     return total, history
 
 def save_inventory(inventory, history, filename = "inventory.txt"):
-    with open(filename = "w") as f:
+    with open(filename, "w") as f:
         f.write(f"{inventory}\n")
         for amount in history:
             f.write(f"{amount}\n")
@@ -51,6 +51,7 @@ while True:
     stock = get_valid_input()
 
     if stock == 'quit':
+        save_inventory(inventory, history)
         generate_report(processed_delivery, failed_attempts, inventory)
         print("GoodBye!")
         break
@@ -60,6 +61,7 @@ while True:
         continue
 
     inventory = process_delivery(inventory, stock)
+    history.append(stock)
     tax = calculate_tax(stock)
     print(f"Tax for this delivery: {tax}")
     processed_delivery += 1
