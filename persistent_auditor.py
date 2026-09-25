@@ -2,6 +2,20 @@ inventory = 0
 failed_attempts = 0
 processed_delivery = 0
 
+def load_inventory(filename = "inventory.txt"):
+    try:
+        with open(filename, "r") as f:
+            lines = f.readlines():
+    except FileNotFoundError:
+        return 0, []
+
+    if not lines:
+        return 0, []
+
+    total = int(lines[0].strip())
+    history = [int(line.strip()) for line in lines[1:] if line.strip()]
+    return total, history
+
 def get_valid_input():
     stock = input("Enter the stock quantity: ")
     if stock == 'quit':
