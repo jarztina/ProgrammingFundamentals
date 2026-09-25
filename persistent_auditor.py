@@ -45,6 +45,8 @@ def generate_report(deliveryProcessed, failedAttempts, totalInventory):
     print(f"Total Failed Attempts: {failedAttempts}")
     print(f"Total Inventory Receivedz: {totalInventory}")
 
+inventory, history = load_inventory()
+
 while True:
     stock = get_valid_input()
 
