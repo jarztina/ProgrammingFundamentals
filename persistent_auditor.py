@@ -16,6 +16,12 @@ def load_inventory(filename = "inventory.txt"):
     history = [int(line.strip()) for line in lines[1:] if line.strip()]
     return total, history
 
+def save_inventory(inventory, history, filename = "inventory.txt"):
+    with open(filename = "w") as f:
+        f.write(f"{inventory}\n")
+        for amount in history:
+            f.write(f"{amount}\n")
+
 def get_valid_input():
     stock = input("Enter the stock quantity: ")
     if stock == 'quit':
