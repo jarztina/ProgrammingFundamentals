@@ -2,35 +2,46 @@ inventory = 0
 failed_attempts = 0
 processed_delivery = 0
 
-def load_inventory(filename = "inventory.txt"): #defines the function with the parameter of filename
-    try: 
-        with open(filename, "r") as f: #opens the file in read mode
-            lines = f.readlines() #reads the file and returns it as a list of strings
-    except FileNotFoundError: #this is used on the first try, with no inventory.txt created
-        return 0, [] #starts with empty total and an empty list of strings
+def load_orders(filename="inventory.txt"):
+    orders = []
+    try:
+        with open(filename, "r") as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        return orders
 
-    if not lines:
-        return 0, [] #stars with empty total and an empty list of strings
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        order_id, name, qty = line.split(",")
+        orders.append((int(order_id), name, int(qty)))
+    return orders
 
-    total = int(lines[0].strip()) #convert the first element of the list and convert it into integer
-    history = [int(line.strip()) for line in lines[1:] if line.strip()] #line.strip removes the /n infront and behind the string
-    return total, history
+def save_order(order, filename="inventory.txt"):
+    with open(filename, "a") as f:  # append, since each order saves immediately
+        f.write(f"{order[0]},{order[1]},{order[2]}\n")
 
-def save_inventory(inventory, history, filename = "inventory.txt"):
-    with open(filename, "w") as f:
-        f.write(f"{inventory}\n")
-        for amount in history:
-            f.write(f"{amount}\n")
+def generate_next_id(orders):
+    if not orders:
+        return 1001
+    return orders[-1][0] + 1
 
-def get_valid_input():
-    stock = input("Enter the stock quantity: ")
-    if stock == 'quit':
-        return 'quit' 
-    if not stock.isdigit():
-        print("Please enter a valid stock quantity")
+def get_order_details():
+    name = input("\nEnter Product Name: ")
+    if name.lower() == 'quit':
+        return 'quit'
+    qty = input("Enter Quantity: ")
+    if not qty.isdigit():
+        print("Please enter a valid quantity")
         return None
-    else:
-        return int(stock)
+    return name, int(qty)
+
+def display_orders(orders):
+    print("Current Orders:")
+    for order in orders:
+        print(f"{order[0]}, {order[1]}, {order[2]}")
+    print()
 
 def process_delivery(current_total, newStock):
     new_total = current_total + newStock
@@ -45,25 +56,27 @@ def generate_report(deliveryProcessed, failedAttempts, totalInventory):
     print(f"Total Failed Attempts: {failedAttempts}")
     print(f"Total Inventory Received: {totalInventory}")
 
-inventory, history = load_inventory()
+orders = load_orders()
+display_orders(orders)
 
 while True:
-    stock = get_valid_input()
+    details = get_order_details()
 
-    if stock == 'quit':
-        save_inventory(inventory, history)
-        generate_report(processed_delivery, failed_attempts, inventory)
+    if details == 'quit':
         print("GoodBye!")
         break
 
-    if stock is None:
-        failed_attempts += 1
+    if details is None:
         continue
 
-    inventory = process_delivery(inventory, stock)
-    history.append(stock)
-    tax = calculate_tax(stock)
-    print(f"Tax for this delivery: {tax}")
-    processed_delivery += 1
+    name, qty = details
+    new_id = generate_next_id(orders)
+    new_order = (new_id, name, qty)
 
+    orders.append(new_order)
+    save_order(new_order)
 
+    print(f"\nNew Order Added:\n{new_order[0]}, {new_order[1]}, {new_order[2]}\n")
+    print("Order successfully saved to inventory.txt\n")
+
+    display_orders(orders)
