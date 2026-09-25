@@ -2,18 +2,18 @@ inventory = 0
 failed_attempts = 0
 processed_delivery = 0
 
-def load_inventory(filename = "inventory.txt"):
-    try:
-        with open(filename, "r") as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        return 0, []
+def load_inventory(filename = "inventory.txt"): #defines the function with the parameter of filename
+    try: 
+        with open(filename, "r") as f: #opens the file in read mode
+            lines = f.readlines() #reads the file and returns it as a list of strings
+    except FileNotFoundError: #this is used on the first try, with no inventory.txt created
+        return 0, [] #starts with empty total and an empty list of strings
 
     if not lines:
-        return 0, []
+        return 0, [] #stars with empty total and an empty list of strings
 
-    total = int(lines[0].strip())
-    history = [int(line.strip()) for line in lines[1:] if line.strip()]
+    total = int(lines[0].strip()) #convert the first element of the list and convert it into integer
+    history = [int(line.strip()) for line in lines[1:] if line.strip()] #line.strip removes the /n infront and behind the string
     return total, history
 
 def save_inventory(inventory, history, filename = "inventory.txt"):
