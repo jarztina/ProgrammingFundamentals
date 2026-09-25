@@ -43,7 +43,7 @@ def calculate_tax(newStock):
 def generate_report(deliveryProcessed, failedAttempts, totalInventory):
     print(f"Total Delivery Processed: {deliveryProcessed}")
     print(f"Total Failed Attempts: {failedAttempts}")
-    print(f"Total Inventory Receivedz: {totalInventory}")
+    print(f"Total Inventory Received: {totalInventory}")
 
 inventory, history = load_inventory()
 
